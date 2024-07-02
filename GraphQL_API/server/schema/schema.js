@@ -4,8 +4,12 @@ const {
   GraphQLInt,
   GraphQLSchema,
   GraphQLID,
-  GraphQLList
+  GraphQLList,
+  GraphQLNonNull
 } = require('graphql');
+
+// const Project = require('../models/project');
+// const Task = require('../models/task');
 
 const ProjectType = new GraphQLObjectType({
   name: 'Project',
@@ -106,8 +110,51 @@ const RootQuery = new GraphQLObjectType({
   }
 });
 
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addProject: {
+      type: ProjectType,
+      args: {
+        title: { type: new GraphQLNonNull(GraphQLString) },
+        weight: { type: new GraphQLNonNull(GraphQLInt)},
+        description: { type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve(parent, args) {
+        const { title, weight, description } = args;
+        const project = new Project({
+          title,
+          weight,
+          description
+        });
+        return project.save();
+      }
+    },
+    addTask: {
+      type: ProjectType,
+      args: {
+        title: { type: new GraphQLNonNull(GraphQLString) },
+        weight: { type: new GraphQLNonNull(GraphQLInt)},
+        description: { type: new GraphQLNonNull(GraphQLString)},
+        projectId: { type: new GraphQLNonNull(GraphQLID) }
+      },
+      resolve(parent, args) {
+        const { title, weight, description, projectId } = args;
+        const task = new Task({
+          title,
+          weight,
+          description,
+          projectId
+        });
+        return task.save();
+      }
+    }
+  }
+});
+
 const schema = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation: Mutation
 });
 
 module.exports = schema;
