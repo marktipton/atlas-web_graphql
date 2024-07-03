@@ -12,9 +12,9 @@ mongoose.connect(uri, {
   useUnifiedTopology: true
 });
 
-// mongoose.connection.once('open', () => {
-//   console.log('connected to database');
-// });
+mongoose.connection.once('open', () => {
+  console.log('connected to database');
+});
 
 // mongoose.connection.on('error', (err) => {
 //   console.error('Error connecting to the database:', err);
