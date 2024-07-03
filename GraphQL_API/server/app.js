@@ -2,14 +2,15 @@ const express = require('express');
 const {graphqlHTTP} = require('express-graphql');
 const schema = require('./schema/schema');
 const app = express();
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-// const uri = "mongodb+srv://marktipton:gr1VKmT7hhRjCb3c@cluster0.r1vmbht.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = "mongodb+srv://marktipton:pleasework@cluster0.r1vmbht.mongodb.net/";
+const PORT = 4000;
 
-// mongoose.connect(uri, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true
-// });
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 // mongoose.connection.once('open', () => {
 //   console.log('connected to database');
@@ -23,6 +24,12 @@ app.use('/graphql',graphqlHTTP({
   schema: schema,
   graphiql: true
 }));
-app.listen(4000,()=>{
-  console.log('now listening for request on port 4000');
+app.listen(PORT,()=>{
+  console.log(`now listening for request on port ${PORT}`);
+});
+
+process.on('SIGTERM', () => {
+  server.close(() => {
+    console.log('Process terminated');
+  });
 });

@@ -8,8 +8,8 @@ const {
   GraphQLNonNull
 } = require('graphql');
 
-// const Project = require('../models/project');
-// const Task = require('../models/task');
+const Project = require('../models/project');
+const Task = require('../models/task');
 
 const ProjectType = new GraphQLObjectType({
   name: 'Project',
