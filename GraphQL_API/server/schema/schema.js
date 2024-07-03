@@ -20,8 +20,8 @@ const ProjectType = new GraphQLObjectType({
     description: { type: GraphQLString },
     tasks: {
       type: new GraphQLList(TaskType),
-      resolve(parent, args) {
-        return tasks.filter(task => task.projectId === parent.id);
+      async resolve(parent, args) {
+        return await Task.find({ projectId: parent.id });
       }
     }
   })
@@ -36,45 +36,45 @@ const TaskType = new GraphQLObjectType({
     description: { type: GraphQLString },
     project: {
       type: ProjectType,
-      resolve(parent, args) {
-        return projects.find(project => project.id === parent.projectId);
+      async resolve(parent, args) {
+        return await Project.findById(parent.projectId);
       }
     }
   })
 });
 
 
-const tasks = [
-  {
-    id: '1',
-    title: 'Create your first webpage',
-    weight: 1,
-    description: 'Create your first HTML file 0-index.html with: -Add the doctype on the first line (without any comment) -After the doctype, open and close a html tag Open your file in your browser (the page should be blank)',
-    projectId: '1'
-  },
-  {
-    id: '2',
-    title: 'Structure your webpage',
-    weight: 1,
-    description: 'Copy the content of 0-index.html into 1-index.html Create the head and body sections inside the html tag, create the head and body tags (empty) in this order',
-    projectId: '1'
-  }
-];
+// const tasks = [
+//   {
+//     id: '1',
+//     title: 'Create your first webpage',
+//     weight: 1,
+//     description: 'Create your first HTML file 0-index.html with: -Add the doctype on the first line (without any comment) -After the doctype, open and close a html tag Open your file in your browser (the page should be blank)',
+//     projectId: '1'
+//   },
+//   {
+//     id: '2',
+//     title: 'Structure your webpage',
+//     weight: 1,
+//     description: 'Copy the content of 0-index.html into 1-index.html Create the head and body sections inside the html tag, create the head and body tags (empty) in this order',
+//     projectId: '1'
+//   }
+// ];
 
-const projects = [
-  {
-    id: '1',
-    title: 'Advanced HTML',
-    weight: 1,
-    description: 'Welcome to the Web Stack specialization. The 3 first projects will give you all basics of the Web development: HTML, CSS and Developer tools. In this project, you will learn how to use HTML tags to structure a web page. No CSS, no styling - don’t worry, the final page will be “ugly” it’s normal, it’s not the purpose of this project. Important note: details are important! lowercase vs uppercase / wrong letter… be careful!'
-  },
-  {
-    id: '2',
-    title: 'Bootstrap',
-    weight: 1,
-    description: 'Bootstrap is a free and open-source CSS framework directed at responsive, mobile-first front-end web development. It contains CSS and JavaScript design templates for typography, forms, buttons, navigation, and other interface components.'
-  }
-];
+// const projects = [
+//   {
+//     id: '1',
+//     title: 'Advanced HTML',
+//     weight: 1,
+//     description: 'Welcome to the Web Stack specialization. The 3 first projects will give you all basics of the Web development: HTML, CSS and Developer tools. In this project, you will learn how to use HTML tags to structure a web page. No CSS, no styling - don’t worry, the final page will be “ugly” it’s normal, it’s not the purpose of this project. Important note: details are important! lowercase vs uppercase / wrong letter… be careful!'
+//   },
+//   {
+//     id: '2',
+//     title: 'Bootstrap',
+//     weight: 1,
+//     description: 'Bootstrap is a free and open-source CSS framework directed at responsive, mobile-first front-end web development. It contains CSS and JavaScript design templates for typography, forms, buttons, navigation, and other interface components.'
+//   }
+// ];
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -82,29 +82,29 @@ const RootQuery = new GraphQLObjectType({
     task: {
       type: TaskType,
       args: { id: { type: GraphQLString } },
-      resolve(parent, args) {
-        return tasks.find(task => task.id === args.id);
+      async resolve(parent, args) {
+        return await Task.findById(args.id);
       }
     },
     project: {
       type: ProjectType,
       args: { id: { type: GraphQLID } },
-      resolve(parent, args) {
-        return projects.find(project => project.id === args.id);
+      async resolve(parent, args) {
+        return await Project.findById(args.id);
       }
     },
     tasks: {
       type: new GraphQLList(TaskType),
       args: { id: { type: GraphQLString } },
-      resolve(parent, args) {
-        return tasks;
+      async resolve(parent, args) {
+        return await Task.find({});
       }
     },
     projects: {
       type: new GraphQLList(ProjectType),
       args: { id: { type: GraphQLID } },
-      resolve(parent, args) {
-        return projects;
+      async resolve(parent, args) {
+        return await Project.find({});
       }
     }
   }
@@ -120,14 +120,14 @@ const Mutation = new GraphQLObjectType({
         weight: { type: new GraphQLNonNull(GraphQLInt)},
         description: { type: new GraphQLNonNull(GraphQLString)}
       },
-      resolve(parent, args) {
+      async resolve(parent, args) {
         const { title, weight, description } = args;
         const project = new Project({
           title,
           weight,
           description
         });
-        return project.save();
+        return await project.save();
       }
     },
     addTask: {
@@ -138,7 +138,7 @@ const Mutation = new GraphQLObjectType({
         description: { type: new GraphQLNonNull(GraphQLString)},
         projectId: { type: new GraphQLNonNull(GraphQLID) }
       },
-      resolve(parent, args) {
+      async resolve(parent, args) {
         const { title, weight, description, projectId } = args;
         const task = new Task({
           title,
@@ -146,7 +146,7 @@ const Mutation = new GraphQLObjectType({
           description,
           projectId
         });
-        return task.save();
+        return await task.save();
       }
     }
   }
