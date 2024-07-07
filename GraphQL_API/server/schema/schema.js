@@ -131,7 +131,7 @@ const Mutation = new GraphQLObjectType({
       }
     },
     addTask: {
-      type: ProjectType,
+      type: TaskType,
       args: {
         title: { type: new GraphQLNonNull(GraphQLString) },
         weight: { type: new GraphQLNonNull(GraphQLInt)},
