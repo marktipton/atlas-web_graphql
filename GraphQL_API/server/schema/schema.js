@@ -37,7 +37,7 @@ const TaskType = new GraphQLObjectType({
     project: {
       type: ProjectType,
       async resolve(parent, args) {
-        return await Project.findById(parent.projectId);
+        return await Project.findOne({ id: parent.projectId });
       }
     }
   })
@@ -83,14 +83,14 @@ const RootQuery = new GraphQLObjectType({
       type: TaskType,
       args: { id: { type: GraphQLString } },
       async resolve(parent, args) {
-        return await Task.findById(args.id);
+        return await Task.findOne({ id: args.id });
       }
     },
     project: {
       type: ProjectType,
       args: { id: { type: GraphQLID } },
       async resolve(parent, args) {
-        return await Project.findById(args.id);
+        return await Project.findOne({ id: args.id });
       }
     },
     tasks: {
@@ -142,13 +142,13 @@ const Mutation = new GraphQLObjectType({
         project: { type: new GraphQLNonNull(GraphQLID) }
       },
       async resolve(parent, args) {
-        const { id, title, weight, description, project } = args;
+        const { id, title, weight, description, projectId } = args;
         const task = new Task({
           id,
           title,
           weight,
           description,
-          project
+          projectId
         });
         return await task.save();
       }
