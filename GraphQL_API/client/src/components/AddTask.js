@@ -95,3 +95,56 @@ function AddTask(props) {
 }
 
 export default AddTask;
+
+// import { gql } from 'apollo-boost';
+// import { graphql } from 'react-apollo';
+// import React from 'react';
+
+// // Define the GraphQL query
+// const getProjectsQuery = gql`
+//   {
+//     projects {
+//       id
+//       title
+//     }
+//   }
+// `;
+
+// // AddTask component
+// function AddTask(props) {
+//   const { loading, error, data } = props.data;
+
+//   if (loading) {
+//     return <div>Loading projects...</div>;
+//   }
+
+//   if (error) {
+//     console.error('Error loading projects:', error);
+//     return <div>Error loading projects</div>;
+//   }
+
+//   return (
+//     <div>
+//       <h2>Add Task</h2>
+//       <form>
+//         <label>Title:</label>
+//         <input type="text" />
+
+//         <label>Project:</label>
+//         <select>
+//           <option>Select Project</option>
+//           {data.projects.map(project => (
+//             <option key={project.id} value={project.id}>
+//               {project.title}
+//             </option>
+//           ))}
+//         </select>
+
+//         <button>Add Task</button>
+//       </form>
+//     </div>
+//   );
+// }
+
+// // Bind the query to the component
+// export default graphql(getProjectsQuery)(AddTask);
