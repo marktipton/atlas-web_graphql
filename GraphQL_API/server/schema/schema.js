@@ -116,13 +116,15 @@ const Mutation = new GraphQLObjectType({
     addProject: {
       type: ProjectType,
       args: {
+        id: { type: new GraphQLNonNull(GraphQLString)},
         title: { type: new GraphQLNonNull(GraphQLString) },
         weight: { type: new GraphQLNonNull(GraphQLInt)},
         description: { type: new GraphQLNonNull(GraphQLString)}
       },
       async resolve(parent, args) {
-        const { title, weight, description } = args;
+        const { id, title, weight, description } = args;
         const project = new Project({
+          id,
           title,
           weight,
           description
@@ -133,18 +135,20 @@ const Mutation = new GraphQLObjectType({
     addTask: {
       type: TaskType,
       args: {
+        id: { type: new GraphQLNonNull(GraphQLString)},
         title: { type: new GraphQLNonNull(GraphQLString) },
         weight: { type: new GraphQLNonNull(GraphQLInt)},
         description: { type: new GraphQLNonNull(GraphQLString)},
-        projectId: { type: new GraphQLNonNull(GraphQLID) }
+        project: { type: new GraphQLNonNull(GraphQLID) }
       },
       async resolve(parent, args) {
-        const { title, weight, description, projectId } = args;
+        const { id, title, weight, description, project } = args;
         const task = new Task({
+          id,
           title,
           weight,
           description,
-          projectId
+          project
         });
         return await task.save();
       }
