@@ -1,9 +1,11 @@
 const express = require('express');
 const {graphqlHTTP} = require('express-graphql');
 const schema = require('./schema/schema');
+const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
 
+app.use(cors());
 const uri = "mongodb+srv://marktipton:pleasework@cluster0.r1vmbht.mongodb.net/";
 const PORT = 4000;
 
