@@ -1,5 +1,5 @@
 mutation {
-  addTask(title: "Reboot styling", weight: 2, description: "Add Bootstrap to reset the CSS styling.", projectId: "66857355e8fa810d5b9b10e0") {
+  addTask(id: "3", title: "Reboot styling", weight: 2, description: "Add Bootstrap to reset the CSS styling.", project: "1") {
     title
     weight
     description
